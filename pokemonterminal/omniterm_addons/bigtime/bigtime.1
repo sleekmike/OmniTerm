@@ -1,0 +1,264 @@
+.TH BIGTIME 1 20200805\-1.2.4.4 Linux "User Manuals"
+.SH NAME
+\fB\fCbigtime\fR \- customizable clock for the terminal
+.SH SYNOPSIS
+.B bigtime
+[\fIOPTION\fR [\fIVALUE\fR]... \fIOPTION\fR [\fIVALUE\fR]]
+.SH DESCRIPTION
+.PP
+Display the current time in big characters.
+.PP
+To render the time, \fBbigtime\fP reads a \fBdigits file\fR (see: \fBDIGITS FILE\fR).
+.SH OPTIONS
+.TP
+\fB\-s\fR, \fB\-\-small\-seconds\fR
+Show seconds (normal size).
+.TP
+\fB\-S\fR, \fB\-\-big-seconds\fR
+Show seconds (big size).
+.TP
+\fB\-d\fR, \fB\-\-date\fR
+Show date.
+.TP
+\fB\-f\fR
+Display time in 24h format.
+.TP
+\fB\-z\fR, \fB\-\-timezone\fR
+Show timezone (i.e. +0200).
+.TP
+\fB\-F\fR, \fB\-\-foreground\fR \fI0..N\fR
+Set foreground color (override \fB\-n\fR and \fB\-r\fR options).
+.TP
+\fB\-B\fR, \fB\-\-background\fR \fI0..N\fR
+Set background color.
+.TP
+\fB\-r\fR, \fB\-\-rainbow\fR
+Rainbow effect (override \fB\-n\fR and \fB\-F\fR options).
+.TP
+\fB\-n\fR, \fB\-\-random\fR
+Random colors (override \fB\-r\fR and \fB\-F\fR options).
+.TP
+\fB\-C\fR, \fB\-\-list-colors\fR
+Print available colors and exit.
+.TP
+\fB\-b\fR, \fB\-\-blink\fR
+Enable blinking separators.
+.TP
+\fB\-a\fR, \fB\-\-alarm\fR \fI[H]H:MM[AM|am|PM|pm]\fR
+Set daily alarm.
+.br
+For testing purpose, if keyword "\fBnow\fR" is used instead of a timestring, alarm rings immediately.
+.TP
+\fB\-t\fR, \fB\-\-timer\fR \fI[H]H:MM[:SS]\fR
+Set timer.
+.TP
+\fB\-i\fR, \fB\-\-signal\fR
+Activate hourly time signal.
+.TP
+\fB\-v\fR, \fB\-\-vertical\fR
+Display clock vertically.
+.br
+(Disable \fB\-b\fR option, since separators are not shown in this mode.)
+.TP
+\fB\-\-file\fR \fIFILENAME\fR
+Use given \fIFILENAME\fR to render digits. Filepath and extension are not needed.
+.br
+\fBBigtime\fR looks for \fIdigits file\fR first in "/etc/bigtime" directory
+.br
+and then in "$HOME/.config/bigtime" directory.
+.TP
+\fB\-w\fR, \fB\-\-preview\fR
+(With \fB\-\-file\fR) display a short preview of the selected file and exit.
+.TP
+\fB\-l\fR, \fB\-\-list\-files\fR
+Print available digits files and exit.
+.TP
+\fB\-q\fR, \fB-\-quiet\fR
+Disable sound, alarm, timer and hourly time signal.
+.TP
+\fB\-h\fR, \fB-\-help\fR
+Print this help and exit.
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version information and exit.
+.SH KEY BINDINGS
+.TP
+a
+Toggle daily alarm; set/confirm new alarm; disable \fBsnooze\fR mode.
+.TP
+h
+Toggle hourly time signal.
+.TP
+j
+Select next digit (alarm/timer setting mode).
+.TP
+k
+Select previous digit (alarm/timer setting mode).
+.TP
+p
+Toggle 24h format / toggle AM/PM (alarm setting mode).
+.TP
+q
+Exit program.
+.TP
+r
+Reset timer (timer setting mode)
+.TP
+R
+refresh screen.
+.TP
+t
+Toggle timer; set/confirm new timer.
+.TP
+space
+Toggle display mode (alarm, timer and then time); stop alarm/timer; cancel alarm/timer (setting mode).
+.SH TIMEZONE
+To display the time for a different timezone, simply prepend \fBTZ\fR environment variable when invoking \fBbigtime\fR.
+
+.br
+.B
+TZ=Europe/Paris bigtime
+.SH DIGITS FILES
+In a nutshell, a \fBdigits file\fR is a text file with the \fB.digits\fR extension
+.br
+that contains instructions on how to draw digits on the screen.
+.TP
+Digits are sequences of 0s and 1s.
+
+.TQ
+Global settings for digits and separator sizes are defined as follow:
+
+.EX
+.br
+.B
+height=5
+.br
+.B
+,,width=5
+.br
+.B
+sep_width=1
+.br
+.EE
+
+.TQ
+The \fIlayout\fR optional parameter can be used to force the clock to display in a particular layout.
+
+.EX
+.br
+.B
+layout=horizontal
+.br
+.EE
+
+.TQ
+Or
+
+.EX
+.br
+.B
+layout=vertical
+.br
+.EE
+
+.TQ
+If this parameter is omitted, horizontal mode is the default unless \fB\-\-vertical\fR option is used.
+
+.TQ
+By default, when \fBbigtime\fR parses a file, 0s are replaced by whitespaces and 1s by "∎".
+.TQ
+But one can define characters as shown below:
+
+.EX
+.B
+.br
+char=@
+.B
+.br
+space=\-
+.br
+.EE
+
+.TQ
+Digits and separator are defined by a semicolon separated list, as follow:
+
+.EX
+.B
+0=11111;11011;11011;11011;11111
+.br
+.B
+...
+.br
+.B
+9=11111;11011;11111;00011;11111
+.br
+.B
+separator=0;1;0;1;0
+.br
+.B
+blank=0;0;0;0;0
+.br
+.EE
+
+.TQ
+With the characters defined earlier, this:
+
+.EX
+.B
+11111
+.br
+.B
+11011
+.br
+.B
+11011
+.br
+.B
+11011
+.br
+.B
+11111
+.br
+.EE
+
+.TQ
+Becomes this:
+
+.EX
+.B
+@@@@@
+.B
+@@-@@
+.br
+.B
+@@-@@
+.br
+.B
+@@-@@
+.br
+.B
+@@@@@
+.br
+.EE
+
+.TQ
+So far, so good...
+.TQ
+\fBYou can find more examples in\fR "\fI/etc/bigtime/digits\fR" \fBdirectory\fR
+
+.TQ
+Custom digits files must be stored in \fBbigtime\fR configuration directory:
+"\fI$HOME/.config/bigtime\fR"
+
+.TQ
+\fBNote\fR: Whenever \fBbigtime\fR encounters a mistake in a \fBdigits file\fR, it will throw an error  
+.TQ
+with a useful description.
+.SH AUTHOR
+Written by Stéphane Meyer (Teegre).
+.SH "REPORTING BUGS"
+https://github.com/teegre/bigtime/issues
+.SH LICENSE
+License MIT.
+.br
+This is free software provided \fBAS IS\fR with \fBNO WARRANTY\fR. Feel free to change and redistribute.
